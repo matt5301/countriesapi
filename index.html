@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- **************************************************************************************** -->
+    <!-- *                                                                                      * -->
+    <!-- * Do not change anything within the <head></head> section of the HTML                  * -->
+    <!-- *                                                                                      * -->
+    <!-- **************************************************************************************** -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<style> .btn{border:1px solid black; padding:5px;display:inline-block} </style>
+</head>
+<body>
+    <!-- **************************************************************************************** -->
+    <!-- *                                                                                      * -->
+    <!-- * Nothing to change here in the <body> ... unless you want to :-)                      * -->
+    <!-- *                                                                                      * -->
+    <!-- **************************************************************************************** -->
+	<div class="container">
+		<h1>Country Data</h1>
+
+		<p><input type="button" class="btn btn-primary" id="btn_1" value="Show the country names"></p>
+		
+		<table id="table-countries" class="table table-bordered">
+			<tr><th>Country Name</th><th>Country Code</th></tr>
+		</table> 
+		
+		<br><br>	
+		
+		<p><input type="button" class="btn btn-primary" id="btn_2" value="Biggest Population">
+		
+		<div id="textDisplayed2"></div> <br>
+		
+		<p><input type="button" class="btn btn-primary" id="btn_3" value="Largest Area"></p>
+		
+		<div id="textDisplayed3"></div> <br>
+		
+		<p><input type="button" class="btn btn-primary" id="btn_4" value="Display Capitals"></p>
+		
+		<ol id="Capitalist"></ol>
+	</div>
+</body>
+<script>
+//
+//  Go see the Country data found here: https://restcountries.com/v3.1/all 
+//
+//  In each function, write a getJSON command to retrieve the data.
+//  Specify what you want done with the data inside the callback function of the 
+//  getJSON method.
+//
+//  Take note of this basic structure:
+//
+//  $.getJSON("",function(result){
+		// the variable named result has 
+		// block level scope inside the callback function.
+		// it is a good practice to display result in console.log		
+//		console.log(result);
+//	});
+
+
+
+function displayCountries() {
+	// here we are emptying the content of the table.
+	$("#table-countries").html("<tr><th>Country Name</th><th>Country Code</th></tr>"); //look! We are putting an empty string in to the inner html of the tag
+	$.getJSON('https://restcountries.com/v3.1/all',function(result){
+		console.log(result);
+		for(let i=0; i < result.length; i++){
+			$('#table-countries').append('<tr><td>' + result[i]['name']['common'] + '</td><td>' + result[i]['cca3'] + '</td></tr>');
+		}
+	})
+}
+
+function findBiggestPopulation(){
+$.getJSON('https://restcountries.com/v3.1/all',function(result){
+	let name=result[0]['name']['common'];
+	let pop=result[0]['population'];
+		for(let i=0; i < result.length; i++){
+			if(result[i]['population'] > pop){
+				pop = result[i]['population'];
+				name = result[i]['name']['common'];
+			}
+		}
+	$('#textDisplayed2').html(name + ', ' + pop);
+	})
+}
+
+
+function findBiggestArea() {
+	$.getJSON('https://restcountries.com/v3.1/all',function(result){
+		let area=result[0]['area'];
+		let name=result[0]['name']['common'];
+			for(let i=0; i < result.length; i++){
+				if(result[i]['area'] > area){
+					area = result[i]['area'];
+					name = result[i]['name']['common'];
+				}
+			}
+			$('#textDisplayed3').html(name + ', ' + area);
+	})
+}
+
+function displayCapitals() {
+	$("#Capitalist").html("");
+	$.getJSON('https://restcountries.com/v3.1/all',function(result){
+		console.log(result);
+		for(let i=0; i < result.length; i++){
+			$('#Capitalist').append('<li>' + result[i]['name']['common'] + ', ' + result[i]['capital'] + '</li>');
+		}
+	})
+}
+
+
+$('#btn_1').click(function(){
+	displayCountries();
+})
+
+$('#btn_2').click(function(){
+	findBiggestPopulation();
+})
+
+$('#btn_3').click(function(){
+	findBiggestArea();
+})
+
+$('#btn_4').click(function(){
+	displayCapitals();
+})
+
+</script>
+</html>
